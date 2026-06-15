@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Dsw2026Ej15.Domain.Entities;
+using Dsw2026Ej15.Data.Dtos;
 
 namespace Dsw2026Ej15.Data.Interfaces
 {
@@ -9,7 +10,7 @@ namespace Dsw2026Ej15.Data.Interfaces
     {
         List<Doctor> GetDoctors();
         List<Speciality> GetSpecialities();
-        void AddDoctor(Doctor doctor);
+        void AddDoctor(DoctorDto doctor);
         void RemoveDoctor(Doctor doctor);
         void InitializeData();
     }

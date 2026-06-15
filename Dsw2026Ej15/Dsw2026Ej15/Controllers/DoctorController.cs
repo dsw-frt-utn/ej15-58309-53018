@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Dsw2026Ej15.Domain.Entities;
 using Dsw2026Ej15.Data.Interfaces;
+using Dsw2026Ej15.Data.Dtos;
+using Dsw2026Ej15.Domain.Entities; 
 namespace Dsw2026Ej15.Api.Controllers
 {
     [ApiController]
@@ -16,9 +17,10 @@ namespace Dsw2026Ej15.Api.Controllers
 
         [HttpPost]
         [Route("api/doctors")]
-        public void Post([FromBody] Doctor doctor) 
+        public void Post([FromBody] DoctorDto doctor) 
         {
             _doctorsData.AddDoctor(doctor);
+
         }
 
         [HttpGet]
