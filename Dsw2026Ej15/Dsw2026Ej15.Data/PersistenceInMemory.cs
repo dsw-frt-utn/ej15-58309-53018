@@ -1,6 +1,6 @@
 ﻿using Dsw2026Ej15.Data.Dtos;
 using Dsw2026Ej15.Data.Interfaces;
-using Dsw2026Ej15.Domain;
+using Dsw2026Ej15.Domain.Entities;
 using System.Net.WebSockets;
 using System.Reflection.Metadata;
 using System.Text.Json;
@@ -9,8 +9,8 @@ namespace Dsw2026Ej15.Data
 {
     public class PersistenceInMemory : IPersistence
     {
-        private readonly List<Doctor> _doctors;
-        private readonly List<Speciality> _specialities;
+        private readonly List<Doctor> _doctors = new List<Doctor> { };
+        private readonly List<Speciality> _specialities = new List<Speciality> { };
         public PersistenceInMemory()
         {
             InitializeData();
@@ -29,8 +29,9 @@ namespace Dsw2026Ej15.Data
         public List<Speciality> GetSpecialities() => _specialities;
         private List<T>? LoadData<T>(string fileName) //TODO: Implementación asíncrona
         {
-            string jsonPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Sources", $"{fileName}.json");
-            string jsonContent = File.ReadAllText(jsonPath);
+            //string jsonPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Sources", $"{fileName}.json");
+            string jsonPath = $"C:\\Users\\User\\Documents\\U\\3er año\\Desarrollo del Software\\2026\\Práctica\\EJ15\\ej15-53018\\Dsw2026Ej15\\Dsw2026Ej15.Data\\Sources\\{fileName}.json";
+            string jsonContent = File.ReadAllText(jsonPath); //TODO: Corregir el path
             return JsonSerializer.Deserialize<List<T>>(jsonContent);
         }
 
@@ -41,7 +42,7 @@ namespace Dsw2026Ej15.Data
             {
                 foreach (var data in specialityData)
                 {
-                    _specialities.Add(new Speciality { Name = data.Nombre, Description = data.Description });
+                    _specialities.Add(new Speciality {Id = data.Id, Name = data.Nombre, Description = data.Description });
                 }
             }
         }
