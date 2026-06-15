@@ -6,6 +6,6 @@ namespace Dsw2026Ej15.Domain
 {
     public abstract class BaseEntity
     {
-        protected Guid Id { get; set; }
+        public Guid Id { get; set; }
     }
 }

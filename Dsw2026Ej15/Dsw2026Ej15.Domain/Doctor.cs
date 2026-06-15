@@ -6,9 +6,9 @@ namespace Dsw2026Ej15.Domain
 {
     public class Doctor : BaseEntity
     {
-        private string Name { get;}
-        private string LicenseNumber { get; }
-        private bool IsActive { get; set; }
-        private Speciality Speciality { get; set; }
+        public string Name { get; set; }
+        public string LicenseNumber { get; }
+        public bool IsActive { get; set; }
+        public Speciality Speciality { get; set; }
     }
 }
