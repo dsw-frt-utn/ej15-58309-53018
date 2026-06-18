@@ -28,18 +28,11 @@ namespace Dsw2026Ej15.Api.Controllers
                 return BadRequest("Error de validación: Campos requeridos vacíos o especialidad inexistente.");
             }
 
-            var nuevoDoctor = new Doctor
-            {
-                Id = Guid.NewGuid(),
-                Name = request.Name,
-                LicenseNumber = request.LicenseNumber,
-                IsActive = true,
-                Speciality = speciality
-            };
+            var newDoctor = new Doctor(request.Name, request.LicenseNumber, speciality);
 
-            _doctorsData.AddDoctor(nuevoDoctor);
+            _doctorsData.AddDoctor(newDoctor);
 
-            return Created("", null);
+            return Created();
         }
 
         [HttpGet]
@@ -56,15 +49,10 @@ namespace Dsw2026Ej15.Api.Controllers
 
             if (doctor == null || !doctor.IsActive)
             {
-                return NotFound();
+                return NotFound("El ID ingresado no corresponde a un doctor ingresado/activo.");
             }
 
-            var response = new
-            {
-                Name = doctor.Name,
-                LicenseNumber = doctor.LicenseNumber,
-                SpecialityName = doctor.Speciality?.Name
-            };
+            var response = new DoctorModel.Response(doctor.Name, doctor.LicenseNumber, doctor.Speciality.Name);
 
             return Ok(response);
         }
