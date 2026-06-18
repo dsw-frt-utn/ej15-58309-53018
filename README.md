@@ -4,3 +4,4 @@
 
 ### Integrantes:
    - Ferreyra Bernabé, 53018
+   - Sosa, Ariana, 58309
