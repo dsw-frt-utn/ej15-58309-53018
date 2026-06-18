@@ -11,8 +11,9 @@ namespace Dsw2026Ej15.Data.Interfaces
         List<Doctor> GetDoctors();
         List<Doctor> GetActiveDoctors();
         Doctor? GetDoctorById(Guid id);
+        Speciality? GetSpecialityById(Guid id);
         List<Speciality> GetSpecialities();
-        void AddDoctor(DoctorDto doctor);
+        void AddDoctor(Doctor doctor);
         void RemoveDoctor(Doctor doctor);
         void InitializeData();
     }

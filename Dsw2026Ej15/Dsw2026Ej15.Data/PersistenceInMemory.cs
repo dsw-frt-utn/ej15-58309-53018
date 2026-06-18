@@ -16,20 +16,10 @@ namespace Dsw2026Ej15.Data
             InitializeData();
         }
 
-        public void AddDoctor(DoctorDto doctor)
-        {
-            var speciality = _specialities.Find(s => s.Id == doctor.SpecialityId);
-            if(speciality is not null)
-            _doctors.Add(new Doctor() 
-            {
-                Id = doctor.Id, 
-                IsActive = doctor.IsActive, 
-                Name = doctor.Name, 
-                Speciality = speciality, 
-                LicenseNumber = doctor.LicenseNumber});
-        }
+        public void AddDoctor(Doctor doctor) => _doctors.Add(doctor);   
         public Doctor? GetDoctorById(Guid id) => _doctors.Find(d => d.Id == id);
         public List<Doctor> GetActiveDoctors() => (from d in _doctors where d.IsActive select d).ToList();
+        public Speciality? GetSpecialityById(Guid id) => _specialities.Find(s => s.Id == id);
 
         #region not used
         public void RemoveDoctor(Doctor doctor)
@@ -67,12 +57,7 @@ namespace Dsw2026Ej15.Data
                 {
                     var speciality = _specialities.Find(s => s.Id == data.SpecialityId);
                     if(speciality != null)
-                    _doctors.Add(new Doctor 
-                    { Id = data.Id, 
-                        Name = data.Name, 
-                        LicenseNumber = data.LicenseNumber,
-                        IsActive = data.IsActive, 
-                        Speciality = speciality});
+                    _doctors.Add(new Doctor  (data.Id, data.Name, data.LicenseNumber, data.IsActive, speciality));
                 }
             }
         }
