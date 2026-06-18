@@ -9,6 +9,8 @@ namespace Dsw2026Ej15.Data.Interfaces
     public interface IPersistence
     {
         List<Doctor> GetDoctors();
+        List<Doctor> GetActiveDoctors();
+        Doctor? GetDoctorById(Guid id);
         List<Speciality> GetSpecialities();
         void AddDoctor(DoctorDto doctor);
         void RemoveDoctor(Doctor doctor);

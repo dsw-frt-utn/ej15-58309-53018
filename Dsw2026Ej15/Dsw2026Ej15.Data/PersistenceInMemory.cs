@@ -28,20 +28,25 @@ namespace Dsw2026Ej15.Data
                 Speciality = speciality, 
                 LicenseNumber = doctor.LicenseNumber});
         }
+        public Doctor? GetDoctorById(Guid id) => _doctors.Find(d => d.Id == id);
+        public List<Doctor> GetActiveDoctors() => (from d in _doctors where d.IsActive select d).ToList();
+
+        #region not used
         public void RemoveDoctor(Doctor doctor)
         {
             _doctors?.Remove(doctor);
         }
         public List<Doctor> GetDoctors() => _doctors;
-
         public List<Speciality> GetSpecialities() => _specialities;
+        #endregion
+
+        #region private methods
         private List<T>? LoadData<T>(string fileName) //TODO: Implementación asíncrona
         {
             string jsonPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Sources", $"{fileName}.json");
-            string jsonContent = File.ReadAllText(jsonPath); 
+            string jsonContent = File.ReadAllText(jsonPath);
             return JsonSerializer.Deserialize<List<T>>(jsonContent);
         }
-
         private void InitializeSpecialities() 
         {
             var specialityData = LoadData<SpecialityDto>("specialities");
@@ -76,6 +81,6 @@ namespace Dsw2026Ej15.Data
             InitializeSpecialities();
             InitializeDoctors();    
         }
-        
+        #endregion
     }
 }

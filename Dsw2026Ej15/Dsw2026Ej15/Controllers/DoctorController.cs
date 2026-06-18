@@ -1,33 +1,43 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Dsw2026Ej15.Data.Interfaces;
 using Dsw2026Ej15.Data.Dtos;
-using Dsw2026Ej15.Domain.Entities; 
+using Dsw2026Ej15.Domain.Entities;
+using Dsw2026Ej15.Api.Models;
 namespace Dsw2026Ej15.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
     public class DoctorController : ControllerBase
     {
-        private readonly IPersistence _doctorsData;
         
-        public DoctorController(IPersistence doctorsData)
+        public DoctorController()
         {
-            _doctorsData = doctorsData;
         }
 
         [HttpPost]
         [Route("api/doctors")]
-        public void Post([FromBody] DoctorDto doctor) 
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public async Task<IActionResult> Post([FromBody] DoctorModel.Request request, [FromServices] IPersistence doctorsData)
         {
-            _doctorsData.AddDoctor(doctor);
-
+            //validaciones acá por ahora. Más adelante, las validaciones estarán en una capa de aplicación (al menos aquellas que estén referidas al negocio)
+            doctorsData.AddDoctor(doctor);
+            // return CreatedAtAction(nameof(Get), new { id = doctor.Id }, doctor);
+            return Created();
         }
 
         [HttpGet]
         [Route("api/doctors")]
-        public List<Doctor> Get() 
+        public IEnumerable<Doctor> GetActiveDoctors([FromServices] IPersistence doctorsData) 
         {
-            return _doctorsData.GetDoctors();
+            return doctorsData.GetActiveDoctors();
         }
+
+        [HttpGet]
+        [Route("api/doctors/{id}")]
+        public Doctor GetDoctorById([FromRoute]Guid id, [FromServices] IPersistence doctorsData) 
+        {
+            return doctorsData.GetDoctorById(id);
+        }
+
     }
 }
