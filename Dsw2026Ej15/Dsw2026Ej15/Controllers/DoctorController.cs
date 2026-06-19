@@ -1,45 +1,87 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Dsw2026Ej15.Data.Interfaces;
-using Dsw2026Ej15.Data.Dtos;
 using Dsw2026Ej15.Domain.Entities;
 using Dsw2026Ej15.Api.Models;
+
 namespace Dsw2026Ej15.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/doctors")]
     public class DoctorController : ControllerBase
     {
         private readonly IPersistence _doctorsData;
-        
+
         public DoctorController(IPersistence doctorsData)
         {
             _doctorsData = doctorsData;
         }
 
         [HttpPost]
-        [Route("api/doctors")]
-        //[ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> Post([FromBody] DoctorModel.Request request)
         {
-            //validaciones acá por ahora. Más adelante, las validaciones estarán en una capa de aplicación (al menos aquellas que estén referidas al negocio)
-            _doctorsData.AddDoctor(request);
-            // return CreatedAtAction(nameof(Get), new { id = doctor.Id }, doctor);
-            return Created();
+            var speciality = _doctorsData.GetSpecialityById(request.SpecialityId);
+
+            if (string.IsNullOrWhiteSpace(request.Name) ||
+                string.IsNullOrWhiteSpace(request.LicenseNumber) ||
+                speciality is null)
+            {
+                return BadRequest("Error de validación: Campos requeridos vacíos o especialidad inexistente.");
+            }
+
+            var nuevoDoctor = new Doctor
+            {
+                Id = Guid.NewGuid(),
+                Name = request.Name,
+                LicenseNumber = request.LicenseNumber,
+                IsActive = true,
+                Speciality = speciality
+            };
+
+            _doctorsData.AddDoctor(nuevoDoctor);
+
+            return Created("", null);
         }
 
         [HttpGet]
-        [Route("api/doctors")]
-        public IEnumerable<Doctor> GetActiveDoctors() 
+        public IActionResult GetActiveDoctors()
         {
-            return _doctorsData.GetActiveDoctors();
+            var doctors = _doctorsData.GetActiveDoctors();
+            return Ok(doctors);
         }
 
-        [HttpGet]
-        [Route("api/doctors/{id}")]
-        public Doctor GetDoctorById([FromRoute]Guid id) 
+        [HttpGet("{id}")]
+        public IActionResult GetDoctorById([FromRoute] Guid id)
         {
-            return _doctorsData.GetDoctorById(id);
+            var doctor = _doctorsData.GetDoctorById(id);
+
+            if (doctor == null || !doctor.IsActive)
+            {
+                return NotFound();
+            }
+
+            var response = new
+            {
+                Name = doctor.Name,
+                LicenseNumber = doctor.LicenseNumber,
+                SpecialityName = doctor.Speciality?.Name
+            };
+
+            return Ok(response);
         }
 
+        [HttpDelete("{id}")]
+        public IActionResult Delete([FromRoute] Guid id)
+        {
+            var doctor = _doctorsData.GetDoctorById(id);
+
+            if (doctor == null || !doctor.IsActive)
+            {
+                return NotFound();
+            }
+
+            doctor.IsActive = false;
+
+            return NoContent();
+        }
     }
 }
