@@ -9,8 +9,8 @@ namespace Dsw2026Ej15.Data
 {
     public class PersistenceInMemory : IPersistence
     {
-        private readonly List<Doctor> _doctors = new List<Doctor> { };
-        private readonly List<Speciality> _specialities = new List<Speciality> { };
+        private readonly List<Doctor> _doctors = [];
+        private readonly List<Speciality> _specialities = [];
         public PersistenceInMemory()
         {
             InitializeData();
@@ -20,14 +20,12 @@ namespace Dsw2026Ej15.Data
         public Doctor? GetDoctorById(Guid id) => _doctors.Find(d => d.Id == id);
         public List<Doctor> GetActiveDoctors() => (from d in _doctors where d.IsActive select d).ToList();
         public Speciality? GetSpecialityById(Guid id) => _specialities.Find(s => s.Id == id);
+        public void RemoveDoctor(Doctor doctor) => _doctors.Remove(doctor);
 
         #region not used
-        public void RemoveDoctor(Doctor doctor)
-        {
-            _doctors?.Remove(doctor);
-        }
-        public List<Doctor> GetDoctors() => _doctors;
-        public List<Speciality> GetSpecialities() => _specialities;
+        
+        private List<Doctor> GetDoctors() => _doctors;
+        private List<Speciality> GetSpecialities() => _specialities;
         #endregion
 
         #region private methods

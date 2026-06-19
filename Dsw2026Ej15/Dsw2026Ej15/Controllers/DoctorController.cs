@@ -24,7 +24,6 @@ namespace Dsw2026Ej15.Api.Controllers
             //validaciones acá por ahora. Más adelante, las validaciones estarán en una capa de aplicación (al menos aquellas que estén referidas al negocio)
             _doctorsData.AddDoctor(request);
             // return CreatedAtAction(nameof(Get), new { id = doctor.Id }, doctor);
-            return Created();
         }
 
         [HttpGet]
@@ -36,9 +35,10 @@ namespace Dsw2026Ej15.Api.Controllers
 
         [HttpGet]
         [Route("api/doctors/{id}")]
-        public Doctor GetDoctorById([FromRoute]Guid id) 
+        public async Task<DoctorModel.Response>? GetDoctorById([FromRoute]Guid id) 
         {
-            return _doctorsData.GetDoctorById(id);
+            var doctor = _doctorsData.GetDoctorById(id);
+            return new DoctorModel.Response(doctor.Name, doctor.LicenseNumber, doctor.Speciality.Name);
         }
 
     }
