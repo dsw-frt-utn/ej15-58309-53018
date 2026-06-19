@@ -2,7 +2,7 @@
 using Dsw2026Ej15.Data.Interfaces;
 using Dsw2026Ej15.Domain.Entities;
 using Dsw2026Ej15.Api.Models;
-using Dsw2026Ej15.Domain.Exception;
+using Dsw2026Ej15.Domain.Exceptions;
 
 namespace Dsw2026Ej15.Api.Controllers
 {
@@ -61,8 +61,11 @@ namespace Dsw2026Ej15.Api.Controllers
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             var doctor = _doctorsData.GetDoctorById(id);
-            return new DoctorModel.Response(doctor.Name, doctor.LicenseNumber, doctor.Speciality.Name);
-        }
+
+            if (doctor == null || !doctor.IsActive)
+            {
+                return NotFound();
+            }
 
             doctor.IsActive = false;
 
