@@ -16,6 +16,7 @@ namespace Dsw2026Ej15.Domain.Entities
             Name = name;   
             LicenseNumber = licenseNumber;    
             Speciality = speciality;
+            IsActive = true;
         }
 
         public Doctor(Guid id, string name, string licenseNumber, bool isActive, Speciality speciality) : base(id)

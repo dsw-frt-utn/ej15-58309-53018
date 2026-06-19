@@ -2,6 +2,7 @@
 using Dsw2026Ej15.Data.Interfaces;
 using Dsw2026Ej15.Domain.Entities;
 using Dsw2026Ej15.Api.Models;
+using Dsw2026Ej15.Domain.Exception;
 
 namespace Dsw2026Ej15.Api.Controllers
 {
@@ -22,34 +23,33 @@ namespace Dsw2026Ej15.Api.Controllers
             var speciality = _doctorsData.GetSpecialityById(request.SpecialityId);
 
             if (string.IsNullOrWhiteSpace(request.Name) ||
-                string.IsNullOrWhiteSpace(request.LicenseNumber) ||
-                speciality is null)
+            string.IsNullOrWhiteSpace(request.LicenseNumber))
             {
-                return BadRequest("Error de validación: Campos requeridos vacíos o especialidad inexistente.");
+                throw new ValidationException("No se permiten campos vacíos");
             }
+            if (speciality is null) throw new ValidationException("No existe la especialidad indicada");
 
             var newDoctor = new Doctor(request.Name, request.LicenseNumber, speciality);
 
             _doctorsData.AddDoctor(newDoctor);
-
             return Created();
         }
 
         [HttpGet]
-        public IActionResult GetActiveDoctors()
+        public async Task<IActionResult> GetActiveDoctors()
         {
             var doctors = _doctorsData.GetActiveDoctors();
             return Ok(doctors);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetDoctorById([FromRoute] Guid id)
+        public async Task<IActionResult> GetDoctorById([FromRoute] Guid id)
         {
             var doctor = _doctorsData.GetDoctorById(id);
 
-            if (doctor == null || !doctor.IsActive)
+            if (doctor == null! || doctor.IsActive) 
             {
-                return NotFound("El ID ingresado no corresponde a un doctor ingresado/activo.");
+                return NotFound("El ID ingresado no corresponde a un doctor registrado/activo.");
             }
 
             var response = new DoctorModel.Response(doctor.Name, doctor.LicenseNumber, doctor.Speciality.Name);
@@ -58,7 +58,7 @@ namespace Dsw2026Ej15.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete([FromRoute] Guid id)
+        public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             var doctor = _doctorsData.GetDoctorById(id);
 
