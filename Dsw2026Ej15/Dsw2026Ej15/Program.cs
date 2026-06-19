@@ -15,9 +15,11 @@ namespace Dsw2026Ej15
 
             builder.Services.AddControllers();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddHealthChecks();
 
             var app = builder.Build();
             app.UseMiddleware<ExceptionHandlingMiddleware>();
+            app.MapHealthChecks("/healt-check");
 
             if (app.Environment.IsDevelopment())
             {
