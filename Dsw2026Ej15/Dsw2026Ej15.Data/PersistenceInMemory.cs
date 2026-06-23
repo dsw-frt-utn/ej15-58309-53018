@@ -25,8 +25,6 @@ namespace Dsw2026Ej15.Data
             _doctors.Remove(doctor);
             _doctors.Add(doctor);
         }
-
-
         #region not used
         
         private List<Doctor> GetDoctors() => _doctors;
@@ -47,7 +45,7 @@ namespace Dsw2026Ej15.Data
             {
                 foreach (var data in specialityData)
                 {
-                    _specialities.Add(new Speciality {Id = data.Id, Name = data.Nombre, Description = data.Description });
+                    _specialities.Add(new Speciality (data.Id, data.Nombre, data.Description));
                 }
             }
         }

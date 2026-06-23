@@ -2,6 +2,7 @@
 using Dsw2026Ej15.Data.Interfaces;
 using Dsw2026Ej15.Data;
 using Dsw2026Ej15.Api.Middleware;
+using Microsoft.EntityFrameworkCore;
 
 namespace Dsw2026Ej15
 {
@@ -11,8 +12,13 @@ namespace Dsw2026Ej15
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddSingleton<IPersistence, PersistenceInMemory>();
-
+            var connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Database = Dsw2026Ej15DB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True";
+            builder.Services.AddScoped<IPersistence, PersistenceEf>();
+            builder.Services.AddDbContext<Dsw2026Ej15DbContext>(
+                options =>
+                {
+                    options.UseSqlServer(connectionString);
+                });
             builder.Services.AddControllers();
             builder.Services.AddSwaggerGen();
             builder.Services.AddHealthChecks();
