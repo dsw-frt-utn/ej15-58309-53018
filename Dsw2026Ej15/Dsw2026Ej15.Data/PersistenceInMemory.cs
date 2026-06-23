@@ -20,7 +20,12 @@ namespace Dsw2026Ej15.Data
         public Doctor? GetDoctorById(Guid id) => _doctors.Find(d => d.Id == id);
         public List<Doctor> GetActiveDoctors() => (from d in _doctors where d.IsActive select d).ToList();
         public Speciality? GetSpecialityById(Guid id) => _specialities.Find(s => s.Id == id);
-        public void RemoveDoctor(Doctor doctor) => _doctors.Remove(doctor);
+        public void UpdateDoctor(Doctor doctor)
+        {
+            _doctors.Remove(doctor);
+            _doctors.Add(doctor);
+        }
+
 
         #region not used
         

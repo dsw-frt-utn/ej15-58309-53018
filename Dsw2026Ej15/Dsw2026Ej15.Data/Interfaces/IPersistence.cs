@@ -12,7 +12,7 @@ namespace Dsw2026Ej15.Data.Interfaces
         Doctor? GetDoctorById(Guid id);
         Speciality? GetSpecialityById(Guid id);
         void AddDoctor(Doctor doctor);
-        void RemoveDoctor(Doctor doctor);
         void InitializeData();
+        void UpdateDoctor(Doctor doctor);
     }
 }

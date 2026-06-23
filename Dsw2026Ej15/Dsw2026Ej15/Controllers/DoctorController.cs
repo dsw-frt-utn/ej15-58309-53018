@@ -66,9 +66,8 @@ namespace Dsw2026Ej15.Api.Controllers
             {
                 return NotFound();
             }
-
-            doctor.IsActive = false;
-
+            doctor.Deactivate();
+            _doctorsData.UpdateDoctor(doctor);
             return NoContent();
         }
     }
