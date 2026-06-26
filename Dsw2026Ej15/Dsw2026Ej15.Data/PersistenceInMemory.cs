@@ -7,7 +7,7 @@ using System.Text.Json;
 
 namespace Dsw2026Ej15.Data
 {
-    public class PersistenceInMemory : IPersistence
+    public class PersistenceInMemory //: IPersistence
     {
         private readonly List<Doctor> _doctors = [];
         private readonly List<Speciality> _specialities = [];

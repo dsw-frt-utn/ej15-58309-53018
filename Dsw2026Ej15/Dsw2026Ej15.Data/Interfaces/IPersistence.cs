@@ -8,11 +8,11 @@ namespace Dsw2026Ej15.Data.Interfaces
 {
     public interface IPersistence
     {
-        Task<List<Doctor>> GetActiveDoctors();
+        Task<IEnumerable<Doctor>?> GetActiveDoctors();
         Task<Doctor?> GetDoctorById(Guid id);
         Task<Speciality?> GetSpecialityById(Guid id);
         Task AddDoctor(Doctor doctor);
-        Task InitializeData();
+        //Task InitializeData();
         Task UpdateDoctor(Doctor doctor);
     }
 }

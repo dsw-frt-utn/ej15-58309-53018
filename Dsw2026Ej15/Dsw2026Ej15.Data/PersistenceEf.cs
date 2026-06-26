@@ -1,8 +1,11 @@
-﻿using Dsw2026Ej15.Data.Interfaces;
+﻿using Dsw2026Ej15.Data.Dtos;
+using Dsw2026Ej15.Data.Interfaces;
 using Dsw2026Ej15.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json;
 
 namespace Dsw2026Ej15.Data
 {
@@ -12,7 +15,15 @@ namespace Dsw2026Ej15.Data
         public PersistenceEf(Dsw2026Ej15DbContext context)
         {
              _context = context;
+             InitializeData();
         }
+        public void InitializeData()
+        {
+            //InitializeSpecialities();
+            //InitializeDoctors();
+            Task.WhenAll(InitializeSpecialities(), InitializeDoctors());
+        }
+
 
         public async Task AddDoctor(Doctor doctor)
         {
@@ -20,29 +31,60 @@ namespace Dsw2026Ej15.Data
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Doctor>> GetActiveDoctors()
+        public async Task<IEnumerable<Doctor>?> GetActiveDoctors()
         {
             return _context.Doctors.Where(d => d.IsActive);
         }
 
-        public Task<Doctor?> GetDoctorById(Guid id)
+        public async Task<Doctor?> GetDoctorById(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Speciality?> GetSpecialityById(Guid id)
+        public async Task<Speciality?> GetSpecialityById(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public Task InitializeData()
+        public async Task UpdateDoctor(Doctor doctor)
         {
             throw new NotImplementedException();
         }
 
-        public Task UpdateDoctor(Doctor doctor)
+        #region private methods
+        private List<T>? LoadData<T>(string fileName) //TODO: Implementación asíncrona
         {
-            throw new NotImplementedException();
+            string jsonPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Sources", $"{fileName}.json");
+            string jsonContent = File.ReadAllText(jsonPath);
+            return JsonSerializer.Deserialize<List<T>>(jsonContent);
         }
+        private async Task InitializeSpecialities()
+        {
+            var specialityData = LoadData<SpecialityDto>("specialities");
+            if (specialityData != null)
+            {
+                foreach (var data in specialityData)
+                {
+                    _context.Specialities.Add(new Speciality(data.Id, data.Nombre, data.Description));
+                }
+                //await _context.SaveChangesAsync();
+                _context.SaveChanges();
+            }
+        }
+        private async Task InitializeDoctors()
+        {
+            var doctorsData = LoadData<DoctorDto>("doctors");
+            if (doctorsData != null)
+            {
+                foreach (var data in doctorsData)
+                {
+                    var speciality = _context.Specialities.Find(data.SpecialityId);
+                    if (speciality != null)
+                        _context.Doctors.Add(new Doctor(data.Id, data.Name, data.LicenseNumber, data.IsActive, speciality));
+                }
+                await _context.SaveChangesAsync();
+            }
+        }
+        #endregion
     }
 }

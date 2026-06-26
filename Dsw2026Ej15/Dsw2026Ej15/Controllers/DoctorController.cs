@@ -18,9 +18,9 @@ namespace Dsw2026Ej15.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] DoctorModel.Request request)
+        public async Task<IActionResult> AddDoctor([FromBody] DoctorModel.Request request)
         {
-            var speciality = _doctorsData.GetSpecialityById(request.SpecialityId);
+            var speciality = await _doctorsData.GetSpecialityById(request.SpecialityId);
 
             if (string.IsNullOrWhiteSpace(request.Name) ||
             string.IsNullOrWhiteSpace(request.LicenseNumber))
@@ -45,7 +45,7 @@ namespace Dsw2026Ej15.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDoctorById([FromRoute] Guid id)
         {
-            var doctor = _doctorsData.GetDoctorById(id);
+            var doctor = await _doctorsData.GetDoctorById(id);
 
             if (doctor == null! || doctor.IsActive) 
             {
@@ -60,7 +60,7 @@ namespace Dsw2026Ej15.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
-            var doctor = _doctorsData.GetDoctorById(id);
+            var doctor = await _doctorsData.GetDoctorById(id);
 
             if (doctor == null || !doctor.IsActive)
             {
