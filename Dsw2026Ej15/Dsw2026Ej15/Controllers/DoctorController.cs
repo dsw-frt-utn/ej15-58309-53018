@@ -31,14 +31,14 @@ namespace Dsw2026Ej15.Api.Controllers
 
             var newDoctor = new Doctor(request.Name, request.LicenseNumber, speciality);
 
-            _doctorsData.AddDoctor(newDoctor);
+            _doctorsData?.AddDoctor(newDoctor);
             return Created();
         }
 
         [HttpGet]
         public async Task<IActionResult> GetActiveDoctors()
         {
-            var doctors = _doctorsData.GetActiveDoctors();
+            var doctors = await _doctorsData.GetActiveDoctors();
             return Ok(doctors);
         }
 
@@ -47,7 +47,7 @@ namespace Dsw2026Ej15.Api.Controllers
         {
             var doctor = await _doctorsData.GetDoctorById(id);
 
-            if (doctor == null! || doctor.IsActive) 
+            if (doctor == null) 
             {
                 return NotFound("El ID ingresado no corresponde a un doctor registrado/activo.");
             }
@@ -58,7 +58,7 @@ namespace Dsw2026Ej15.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete([FromRoute] Guid id)
+        public async Task<IActionResult> DeleteDoctor([FromRoute] Guid id)
         {
             var doctor = await _doctorsData.GetDoctorById(id);
 
@@ -66,9 +66,9 @@ namespace Dsw2026Ej15.Api.Controllers
             {
                 return NotFound();
             }
-            doctor.Deactivate();
-            _doctorsData.UpdateDoctor(doctor);
+            await _doctorsData.RemoveDoctor(doctor);
             return NoContent();
         }
     }
 }
+        

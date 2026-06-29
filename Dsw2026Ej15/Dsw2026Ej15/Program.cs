@@ -12,8 +12,8 @@ namespace Dsw2026Ej15
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            var connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Database = Dsw2026Ej15DB;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True";
-            builder.Services.AddScoped<IPersistence, PersistenceEf>();
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+            
             builder.Services.AddDbContext<Dsw2026Ej15DbContext>(
                 options =>
                 {
@@ -22,7 +22,7 @@ namespace Dsw2026Ej15
             builder.Services.AddControllers();
             builder.Services.AddSwaggerGen();
             builder.Services.AddHealthChecks();
-
+            builder.Services.AddScoped<IPersistence, PersistenceEf>();
             var app = builder.Build();
             app.UseMiddleware<ExceptionHandlingMiddleware>();
             app.MapHealthChecks("/healt-check");
@@ -44,3 +44,4 @@ namespace Dsw2026Ej15
         }
     }
 }
+    

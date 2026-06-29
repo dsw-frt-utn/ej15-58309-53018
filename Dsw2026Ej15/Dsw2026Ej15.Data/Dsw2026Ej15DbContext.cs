@@ -11,7 +11,7 @@ namespace Dsw2026Ej15.Data
         public DbSet<Speciality> Specialities { get; set; }
         public Dsw2026Ej15DbContext(DbContextOptions<Dsw2026Ej15DbContext> options) : base(options)
         {
-            
+                        
         }
 
     }
